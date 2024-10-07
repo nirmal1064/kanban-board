@@ -9,7 +9,7 @@ export default function Sidebar() {
   return (
     <div className="hidden w-[250px] min-w-[250px] border-separate border-2 md:block">
       <div className="flex flex-col gap-2">
-        <h1>Projects</h1>
+        <h1 className="text-lg font-bold text-primary">Projects</h1>
         {projects.length === 0 ? (
           <div>No Projects Found. Create a New Project to continue</div>
         ) : (

@@ -1,5 +1,4 @@
 import { Project } from "@/lib/types";
-import { Card, CardHeader, CardTitle } from "../ui/card";
 import { useBoard } from "@/hooks/useBoard";
 import { cn } from "@/lib/utils";
 
@@ -12,16 +11,16 @@ export default function ProjectCard({ project }: Props) {
   const isActive = project.id === selectedProject?.id;
 
   return (
-    <Card
+    <div
       className={cn(
-        "cursor-pointer outline-none transition hover:ring hover:ring-rose-500",
-        isActive ? "border border-rose-500 shadow-lg" : "hover:shadow-lg"
+        "cursor-pointer rounded-md p-3 transition-all duration-150",
+        isActive
+          ? "bg-secondary text-secondary-foreground"
+          : "bg-transparent text-muted-foreground hover:bg-accent hover:text-accent-foreground"
       )}
       onClick={() => setSelectedProject(project)}
     >
-      <CardHeader className="p-2 py-3">
-        <CardTitle>{project.title}</CardTitle>
-      </CardHeader>
-    </Card>
+      <h3 className="text-sm font-semibold">{project.title}</h3>
+    </div>
   );
 }
