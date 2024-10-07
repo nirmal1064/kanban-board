@@ -1,45 +1,34 @@
+import { useBoard } from "@/hooks/useBoard";
 import useLocalStorage from "@/hooks/useLocalStorage";
 import { COLUMNS_KEY, TASKS_KEY } from "@/lib/constants";
 import { generateID } from "@/lib/helpers";
 import { Column, ID, Task } from "@/lib/types";
-import {
-  DndContext,
-  DragEndEvent,
-  DragOverEvent,
-  DragOverlay,
-  DragStartEvent,
-  PointerSensor,
-  useSensor,
-  useSensors,
-} from "@dnd-kit/core";
-import { arrayMove, SortableContext } from "@dnd-kit/sortable";
-import { Plus } from "lucide-react";
-import { useMemo, useState } from "react";
-import { createPortal } from "react-dom";
-import ColumnContainer from "./ColumnContainer";
-import TaskCard from "./TaskCard";
-import { Button } from "./ui/button";
+import { DragEndEvent, DragOverEvent, DragStartEvent } from "@dnd-kit/core";
+import { arrayMove } from "@dnd-kit/sortable";
+import { createContext, ReactNode, useState } from "react";
 
-export default function KanbanBoard() {
+type Props = { children: ReactNode };
+
+export const ColumnProviderContext = createContext<
+  ReturnType<typeof useColumnProvider> | undefined
+>(undefined);
+
+function useColumnProvider() {
+  const { selectedProject } = useBoard();
   const [columns, setColumns] = useLocalStorage<Column[]>(COLUMNS_KEY, []);
   const [activeColumn, setActiveColumn] = useState<Column>();
-  const columnIds = useMemo(() => columns.map((c) => c.id), [columns]);
   const [tasks, setTasks] = useLocalStorage<Task[]>(TASKS_KEY, []);
   const [activeTask, setActiveTask] = useState<Task>();
 
-  const sensors = useSensors(
-    useSensor(PointerSensor, {
-      activationConstraint: { distance: 1 },
-    })
-  );
-
   function createNewColumn() {
-    const columnToAdd: Column = {
-      id: generateID(),
-      projectId: generateID(),
-      title: `Column ${columns.length + 1}`,
-    };
-    setColumns([...columns, columnToAdd]);
+    if (selectedProject) {
+      const columnToAdd: Column = {
+        id: generateID(),
+        projectId: selectedProject.id,
+        title: `Column ${columns.length + 1}`,
+      };
+      setColumns([...columns, columnToAdd]);
+    }
   }
 
   function deleteColumn(id: ID): void {
@@ -57,13 +46,15 @@ export default function KanbanBoard() {
   }
 
   function createTask(columnId: ID) {
-    const task: Task = {
-      id: generateID(),
-      projectId: generateID(),
-      columnId,
-      content: `Task ${tasks.length + 1}`,
-    };
-    setTasks([...tasks, task]);
+    if (selectedProject) {
+      const task: Task = {
+        id: generateID(),
+        projectId: selectedProject.id,
+        columnId,
+        content: `Task ${tasks.length + 1}`,
+      };
+      setTasks([...tasks, task]);
+    }
   }
 
   function updateTask(id: ID, content: string) {
@@ -137,62 +128,29 @@ export default function KanbanBoard() {
     }
   }
 
+  return {
+    columns,
+    createNewColumn,
+    updateColumn,
+    deleteColumn,
+    activeColumn,
+    tasks,
+    createTask,
+    updateTask,
+    deleteTask,
+    activeTask,
+    onDragStart,
+    onDragEnd,
+    onDragOver,
+  };
+}
+
+export default function ColumnProvider({ children }: Props) {
+  const columnProvider = useColumnProvider();
+
   return (
-    <DndContext
-      onDragStart={onDragStart}
-      onDragEnd={onDragEnd}
-      onDragOver={onDragOver}
-      sensors={sensors}
-    >
-      <div className="mx-auto flex gap-4">
-        <div className="flex gap-4">
-          <SortableContext items={columnIds}>
-            {columns.map((column) => (
-              <ColumnContainer
-                column={column}
-                key={column.id}
-                deleteColumn={deleteColumn}
-                updateColumn={updateColumn}
-                tasks={tasks.filter((t) => t.columnId === column.id)}
-                createTask={createTask}
-                deleteTask={deleteTask}
-                updateTask={updateTask}
-              />
-            ))}
-          </SortableContext>
-        </div>
-        <Button
-          variant={"outline"}
-          className="flex h-[60px] w-[350px] min-w-[350px] cursor-pointer gap-2 rounded-lg border-2 border-column bg-main ring-rose-500 hover:ring-2"
-          onClick={() => createNewColumn()}
-        >
-          <Plus className="h-5 w-5" />
-          Add Column
-        </Button>
-      </div>
-      {createPortal(
-        <DragOverlay>
-          {activeColumn && (
-            <ColumnContainer
-              column={activeColumn}
-              deleteColumn={deleteColumn}
-              updateColumn={updateColumn}
-              tasks={tasks.filter((t) => t.columnId === activeColumn.id)}
-              createTask={createTask}
-              deleteTask={deleteTask}
-              updateTask={updateTask}
-            />
-          )}
-          {activeTask && (
-            <TaskCard
-              task={activeTask}
-              deleteTask={deleteTask}
-              updateTask={updateTask}
-            />
-          )}
-        </DragOverlay>,
-        document.body
-      )}
-    </DndContext>
+    <ColumnProviderContext.Provider value={columnProvider}>
+      {children}
+    </ColumnProviderContext.Provider>
   );
 }

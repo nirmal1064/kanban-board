@@ -1,5 +1,6 @@
 import { useEffect } from "react";
-import KanbanBoard from "./components/KanbanBoard";
+import Sidebar from "./components/Sidebar";
+import Board from "./components/new/Board";
 
 export default function App() {
   useEffect(() => {
@@ -7,8 +8,11 @@ export default function App() {
   }, []);
 
   return (
-    <main className="m-auto flex min-h-screen items-center overflow-x-auto overflow-y-hidden bg-background px-10 text-foreground">
-      <KanbanBoard />
-    </main>
+    <div className="flex">
+      <Sidebar />
+      <main className="m-auto flex min-h-screen items-center overflow-y-hidden overflow-x-scroll bg-background px-10 text-foreground">
+        <Board />
+      </main>
+    </div>
   );
 }
