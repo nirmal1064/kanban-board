@@ -13,4 +13,4 @@ I am planning to build the project further on top of the tutorial.
 
 ## Planned Non-Functional Requirements
 
-- [ ] Use any random ID generator libraries like UUID/CUID/nanoid.
+- [x] Use any random ID generator libraries like UUID/CUID/nanoid.

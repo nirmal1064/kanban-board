@@ -1,3 +1,5 @@
+import { nanoid } from "nanoid";
+
 export function generateID() {
-  return Math.floor(Math.random() * 10001);
+  return nanoid(10);
 }
