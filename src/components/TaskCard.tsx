@@ -1,11 +1,11 @@
 import { ID, Task } from "@/lib/types";
 import { cn } from "@/lib/utils";
-import { Button } from "./ui/button";
-import { Trash } from "lucide-react";
-import { ChangeEvent, useState } from "react";
-import { Textarea } from "./ui/textarea";
 import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
+import { Trash } from "lucide-react";
+import { ChangeEvent, useState } from "react";
+import { Button } from "./ui/button";
+import { Textarea } from "./ui/textarea";
 
 type Props = {
   task: Task;
@@ -46,7 +46,7 @@ export default function TaskCard({ task, deleteTask, updateTask }: Props) {
         ref={setNodeRef}
         style={style}
         className={cn(
-          "bg-main flex h-[100px] min-h-[100px] cursor-grab items-center rounded-xl border-rose-500 p-2.5 text-left opacity-30"
+          "flex h-[100px] min-h-[100px] cursor-grab items-center rounded-xl border-rose-500 bg-main p-2.5 text-left opacity-30"
         )}
       >
         <p className="my-auto h-[90%] w-full overflow-y-auto overflow-x-hidden whitespace-pre-wrap">
@@ -64,7 +64,7 @@ export default function TaskCard({ task, deleteTask, updateTask }: Props) {
         {...attributes}
         {...listeners}
         className={cn(
-          "bg-main relative flex h-[100px] min-h-[100px] cursor-grab items-center rounded-xl p-2.5 text-left",
+          "relative flex h-[100px] min-h-[100px] cursor-grab items-center rounded-xl bg-main p-2.5 text-left",
           "hover:ring-2 hover:ring-inset hover:ring-rose-500"
         )}
       >
@@ -106,7 +106,7 @@ export default function TaskCard({ task, deleteTask, updateTask }: Props) {
       {...attributes}
       {...listeners}
       className={cn(
-        "bg-main relative flex h-[100px] min-h-[100px] cursor-grab items-center rounded-xl p-2.5 text-left",
+        "relative flex h-[100px] min-h-[100px] cursor-grab items-center rounded-xl bg-main p-2.5 text-left",
         "hover:ring-2 hover:ring-inset hover:ring-rose-500"
       )}
       onMouseEnter={() => setMouseOver(true)}
@@ -119,7 +119,7 @@ export default function TaskCard({ task, deleteTask, updateTask }: Props) {
       {mouseOver && (
         <Button
           variant={"ghost"}
-          className="bg-column absolute right-4 top-1/2 -translate-y-1/2 rounded p-2 opacity-60 hover:opacity-100"
+          className="absolute right-4 top-1/2 -translate-y-1/2 rounded bg-column p-2 opacity-60 hover:opacity-100"
           onClick={() => deleteTask(task.id)}
         >
           <Trash className="h-4 w-4" />

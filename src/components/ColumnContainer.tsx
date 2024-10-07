@@ -4,9 +4,9 @@ import { SortableContext, useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
 import { CirclePlus, Trash } from "lucide-react";
 import { ChangeEvent, useMemo, useState } from "react";
+import TaskCard from "./TaskCard";
 import { Button } from "./ui/button";
 import { Input } from "./ui/input";
-import TaskCard from "./TaskCard";
 
 type Props = {
   column: Column;
@@ -51,7 +51,7 @@ export default function ColumnContainer({
   if (isDragging) {
     return (
       <div
-        className="bg-column flex h-[500px] max-h-[500px] w-[350px] flex-col rounded-md border-2 border-rose-500 opacity-40"
+        className="flex h-[500px] max-h-[500px] w-[350px] flex-col rounded-md border-2 border-rose-500 bg-column opacity-40"
         style={style}
         ref={setNodeRef}
       ></div>
@@ -60,7 +60,7 @@ export default function ColumnContainer({
 
   return (
     <div
-      className="bg-column flex h-[500px] max-h-[500px] w-[350px] flex-col rounded-md"
+      className="flex h-[500px] max-h-[500px] w-[350px] flex-col rounded-md bg-column"
       style={style}
       ref={setNodeRef}
     >
@@ -68,12 +68,12 @@ export default function ColumnContainer({
         {...attributes}
         {...listeners}
         className={cn(
-          "bg-main border-column h-[60px] cursor-grab rounded-md rounded-b-none border-4 p-3 text-lg font-bold",
+          "h-[60px] cursor-grab rounded-md rounded-b-none border-4 border-column bg-main p-3 text-lg font-bold",
           "flex items-center justify-between"
         )}
       >
         <div className="flex">
-          <div className="bg-column flex items-center justify-center rounded-full px-2 py-1 text-sm">
+          <div className="flex items-center justify-center rounded-full bg-column px-2 py-1 text-sm">
             {tasks.length}
           </div>
           {editMode ? (
@@ -116,7 +116,10 @@ export default function ColumnContainer({
         </SortableContext>
       </div>
       <Button
-        className="border-column border-x-column hover:bg-main flex items-center gap-2 rounded-md border-2 p-6 hover:text-rose-500 active:bg-background"
+        className={cn(
+          "flex items-center gap-2 rounded-md border-2 border-column border-x-column p-6 active:bg-background",
+          "hover:bg-main hover:text-rose-500"
+        )}
         variant={"outline"}
         onClick={() => createTask(column.id)}
       >

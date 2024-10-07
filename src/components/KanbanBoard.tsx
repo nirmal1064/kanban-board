@@ -1,3 +1,5 @@
+import useLocalStorage from "@/hooks/useLocalStorage";
+import { COLUMNS_KEY, TASKS_KEY } from "@/lib/constants";
 import { generateID } from "@/lib/helpers";
 import { Column, ID, Task } from "@/lib/types";
 import {
@@ -15,14 +17,14 @@ import { Plus } from "lucide-react";
 import { useMemo, useState } from "react";
 import { createPortal } from "react-dom";
 import ColumnContainer from "./ColumnContainer";
-import { Button } from "./ui/button";
 import TaskCard from "./TaskCard";
+import { Button } from "./ui/button";
 
 export default function KanbanBoard() {
-  const [columns, setColumns] = useState<Column[]>([]);
+  const [columns, setColumns] = useLocalStorage<Column[]>(COLUMNS_KEY, []);
   const [activeColumn, setActiveColumn] = useState<Column>();
   const columnIds = useMemo(() => columns.map((c) => c.id), [columns]);
-  const [tasks, setTasks] = useState<Task[]>([]);
+  const [tasks, setTasks] = useLocalStorage<Task[]>(TASKS_KEY, []);
   const [activeTask, setActiveTask] = useState<Task>();
 
   const sensors = useSensors(
@@ -160,7 +162,7 @@ export default function KanbanBoard() {
         </div>
         <Button
           variant={"outline"}
-          className="bg-main border-column flex h-[60px] w-[350px] min-w-[350px] cursor-pointer gap-2 rounded-lg border-2 ring-rose-500 hover:ring-2"
+          className="flex h-[60px] w-[350px] min-w-[350px] cursor-pointer gap-2 rounded-lg border-2 border-column bg-main ring-rose-500 hover:ring-2"
           onClick={() => createNewColumn()}
         >
           <Plus className="h-5 w-5" />
