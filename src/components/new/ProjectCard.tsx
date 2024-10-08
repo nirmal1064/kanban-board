@@ -1,5 +1,5 @@
-import { Project } from "@/lib/types";
 import { useBoard } from "@/hooks/useBoard";
+import { Project } from "@/lib/types";
 import { cn } from "@/lib/utils";
 
 type Props = {

@@ -1,14 +1,14 @@
 import { useColumn } from "@/hooks/useColumn";
+import { useTasks } from "@/hooks/useTasks";
 import { Column as ColumnType } from "@/lib/types";
 import { cn } from "@/lib/utils";
 import { SortableContext, useSortable } from "@dnd-kit/sortable";
+import { CSS } from "@dnd-kit/utilities";
 import { CirclePlus, Trash } from "lucide-react";
 import { ChangeEvent, useMemo, useState } from "react";
 import { Button } from "../ui/button";
-import Task from "./Task";
-import { useTasks } from "@/hooks/useTasks";
-import { CSS } from "@dnd-kit/utilities";
 import { Input } from "../ui/input";
+import Task from "./Task";
 
 type Props = { column: ColumnType };
 

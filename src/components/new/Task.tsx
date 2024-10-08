@@ -1,11 +1,11 @@
 import { useColumn } from "@/hooks/useColumn";
 import { Task as TaskType } from "@/lib/types";
 import { cn } from "@/lib/utils";
+import { useSortable } from "@dnd-kit/sortable";
+import { CSS } from "@dnd-kit/utilities";
 import { Trash } from "lucide-react";
 import { ChangeEvent, useState } from "react";
 import { Button } from "../ui/button";
-import { useSortable } from "@dnd-kit/sortable";
-import { CSS } from "@dnd-kit/utilities";
 import { Textarea } from "../ui/textarea";
 
 type Props = { task: TaskType };
