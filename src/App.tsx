@@ -1,18 +1,14 @@
-import { useEffect } from "react";
-import Sidebar from "./components/Sidebar";
-import Board from "./components/new/Board";
+import { BrowserRouter, Route, Routes } from "react-router-dom";
+import HomePage from "./pages/Home";
+import LoginPage from "./pages/Login";
 
 export default function App() {
-  useEffect(() => {
-    document.body.classList.add("dark");
-  }, []);
-
   return (
-    <div className="flex">
-      <Sidebar />
-      <main className="m-auto flex min-h-screen items-center overflow-y-hidden overflow-x-scroll bg-background px-10 text-foreground">
-        <Board />
-      </main>
-    </div>
+    <BrowserRouter>
+      <Routes>
+        <Route element={<HomePage />} path="/" />
+        <Route element={<LoginPage />} path="/login" />
+      </Routes>
+    </BrowserRouter>
   );
 }

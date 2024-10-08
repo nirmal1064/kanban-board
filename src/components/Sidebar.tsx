@@ -1,7 +1,7 @@
 import { useBoard } from "@/hooks/useBoard";
-import { Button } from "./ui/button";
 import { Plus } from "lucide-react";
 import ProjectCard from "./new/ProjectCard";
+import { Button } from "./ui/button";
 
 export default function Sidebar() {
   const { projects, createNewProject } = useBoard();
@@ -15,7 +15,7 @@ export default function Sidebar() {
         ) : (
           <div className="flex flex-col gap-2">
             {projects.map((project) => (
-              <ProjectCard key={project.id} project={project} />
+              <ProjectCard key={project.$id} project={project} />
             ))}
           </div>
         )}

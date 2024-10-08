@@ -26,7 +26,7 @@ export default function Board() {
     onDragOver,
     onDragEnd,
   } = useColumn();
-  const columnIds = useMemo(() => columns.map((c) => c.id), [columns]);
+  const columnIds = useMemo(() => columns.map((c) => c.$id), [columns]);
 
   const sensors = useSensors(
     useSensor(PointerSensor, {
@@ -49,7 +49,7 @@ export default function Board() {
         <div className="flex gap-4">
           <SortableContext items={columnIds}>
             {columns.map((column) => (
-              <Column key={column.id} column={column} />
+              <Column key={column.$id} column={column} />
             ))}
           </SortableContext>
         </div>

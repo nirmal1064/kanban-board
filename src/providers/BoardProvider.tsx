@@ -1,8 +1,10 @@
-import useLocalStorage from "@/hooks/useLocalStorage";
-import { PROJECTS_KEY } from "@/lib/constants";
-import { generateID } from "@/lib/helpers";
-import { ID, Project } from "@/lib/types";
-import { createContext, ReactNode, useState } from "react";
+import {
+  createProject,
+  deleteProjectDoc,
+  getProjects,
+} from "@/appwrite/database";
+import { ProjectType } from "@/lib/types";
+import { createContext, ReactNode, useEffect, useState } from "react";
 
 export const BoardProviderContext = createContext<
   ReturnType<typeof useBoardProvider> | undefined
@@ -11,23 +13,34 @@ export const BoardProviderContext = createContext<
 type Props = { children: ReactNode };
 
 function useBoardProvider() {
-  const [projects, setProjects] = useLocalStorage<Project[]>(PROJECTS_KEY, []);
-  const [selectedProject, setSelectedProject] = useState<Project | null>(null);
+  const [projects, setProjects] = useState<ProjectType[]>([]);
+  const [selectedProject, setSelectedProject] = useState<ProjectType | null>(
+    null
+  );
 
-  function createNewProject() {
-    const project: Project = {
-      id: generateID(),
+  async function createNewProject() {
+    const projectToCreate = {
       title: `Project ${projects.length + 1}`,
     };
-    setProjects([...projects, project]);
+    const newProject = await createProject<ProjectType>(projectToCreate);
+    setProjects([...projects, newProject]);
+    alert("Project Created");
   }
 
-  function deleteProject(id: ID): void {
-    const newProjects = projects.filter((p) => p.id !== id);
+  // TODO : Test this functionality once the delete project button is created
+  async function deleteProject(id: string) {
+    await deleteProjectDoc(id);
+    const newProjects = projects.filter((p) => p.$id !== id);
     setProjects(newProjects);
-    // TODO: Delete Columns associated with the project
-    // TODO: Delete Tasks associated with the project
   }
+
+  useEffect(() => {
+    async function fetchProjects() {
+      const projects = await getProjects<ProjectType>();
+      setProjects(projects);
+    }
+    fetchProjects();
+  }, []);
 
   return {
     projects,

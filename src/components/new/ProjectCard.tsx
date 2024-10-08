@@ -1,14 +1,12 @@
 import { useBoard } from "@/hooks/useBoard";
-import { Project } from "@/lib/types";
+import { ProjectType } from "@/lib/types";
 import { cn } from "@/lib/utils";
 
-type Props = {
-  project: Project;
-};
+type Props = { project: ProjectType };
 
 export default function ProjectCard({ project }: Props) {
   const { selectedProject, setSelectedProject } = useBoard();
-  const isActive = project.id === selectedProject?.id;
+  const isActive = project.$id === selectedProject?.$id;
 
   return (
     <div

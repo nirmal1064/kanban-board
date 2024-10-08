@@ -1,6 +1,6 @@
 import { useColumn } from "@/hooks/useColumn";
 import { useTasks } from "@/hooks/useTasks";
-import { Column as ColumnType } from "@/lib/types";
+import { ColumnType } from "@/lib/types";
 import { cn } from "@/lib/utils";
 import { SortableContext, useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
@@ -14,8 +14,8 @@ type Props = { column: ColumnType };
 
 export default function Column({ column }: Props) {
   const { deleteColumn, updateColumn, createTask } = useColumn();
-  const { tasks } = useTasks(column.id);
-  const taskIds = useMemo(() => tasks.map((task) => task.id), [tasks]);
+  const { tasks } = useTasks(column.$id);
+  const taskIds = useMemo(() => tasks.map((task) => task.$id), [tasks]);
   const [editMode, setEditMode] = useState(false);
   const [columnTitle, setColumnTitle] = useState(column.title);
   const {
@@ -26,7 +26,7 @@ export default function Column({ column }: Props) {
     transition,
     isDragging,
   } = useSortable({
-    id: column.id,
+    id: column.$id,
     data: { type: "Column", column },
     disabled: editMode,
   });
@@ -77,7 +77,7 @@ export default function Column({ column }: Props) {
               }}
               onKeyDown={(e) => {
                 if (e.key === "Enter") {
-                  updateColumn(column.id, columnTitle);
+                  updateColumn(column.$id, columnTitle);
                   setEditMode(false);
                 }
               }}
@@ -86,14 +86,14 @@ export default function Column({ column }: Props) {
             <p onClick={() => setEditMode(true)}>{column.title}</p>
           )}
         </div>
-        <Button variant={"ghost"} onClick={() => deleteColumn(column.id)}>
+        <Button variant={"ghost"} onClick={() => deleteColumn(column.$id)}>
           <Trash className="h-4 w-4" />
         </Button>
       </div>
       <div className="flex flex-grow flex-col gap-3 overflow-y-auto overflow-x-hidden p-2">
         <SortableContext items={taskIds}>
           {tasks.map((task) => (
-            <Task key={task.id} task={task} />
+            <Task key={task.$id} task={task} />
           ))}
         </SortableContext>
       </div>
@@ -103,7 +103,7 @@ export default function Column({ column }: Props) {
           "hover:bg-main hover:text-rose-500"
         )}
         variant={"outline"}
-        onClick={() => createTask(column.id)}
+        onClick={() => createTask(column.$id)}
       >
         <CirclePlus className="h-5 w-5" />
         Add Task

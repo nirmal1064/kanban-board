@@ -1,5 +1,5 @@
 import { useColumn } from "@/hooks/useColumn";
-import { Task as TaskType } from "@/lib/types";
+import { TaskType } from "@/lib/types";
 import { cn } from "@/lib/utils";
 import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
@@ -23,7 +23,7 @@ export default function Task({ task }: Props) {
     transition,
     isDragging,
   } = useSortable({
-    id: task.id,
+    id: task.$id,
     data: { type: "Task", task },
     disabled: editMode,
   });
@@ -68,7 +68,7 @@ export default function Task({ task }: Props) {
       >
         <Textarea
           ref={(textarea) => {
-            // TO position the cursor at the end of the text
+            // To position the cursor at the end of the text
             if (textarea) {
               const length = textarea.value.length;
               textarea.setSelectionRange(length, length);
@@ -89,7 +89,7 @@ export default function Task({ task }: Props) {
               return;
             }
             if (e.key === "Enter") {
-              updateTask(task.id, taskContent);
+              updateTask(task.$id, taskContent);
               toggleEditMode();
             }
           }}
@@ -119,7 +119,7 @@ export default function Task({ task }: Props) {
         <Button
           variant={"ghost"}
           className="absolute right-4 top-1/2 -translate-y-1/2 rounded bg-column p-2 opacity-60 hover:opacity-100"
-          onClick={() => deleteTask(task.id)}
+          onClick={() => deleteTask(task.$id)}
         >
           <Trash className="h-4 w-4" />
         </Button>

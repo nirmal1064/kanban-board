@@ -17,7 +17,7 @@ export function useTasks(columnId: ID) {
   const filteredTasks = selectedProject
     ? tasks.filter(
         (task) =>
-          task.projectId === selectedProject.id && task.columnId === columnId
+          task.projectId === selectedProject.$id && task.columnId === columnId
       )
     : [];
 

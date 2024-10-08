@@ -15,7 +15,7 @@ export function useColumn() {
   const { columns } = context;
 
   const filteredColumns = selectedProject
-    ? columns.filter((column) => column.projectId === selectedProject.id)
+    ? columns.filter((column) => column.projectId === selectedProject.$id)
     : [];
 
   return { ...context, columns: filteredColumns };
