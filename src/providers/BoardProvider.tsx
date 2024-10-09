@@ -24,7 +24,6 @@ function useBoardProvider() {
     };
     const newProject = await createProject<ProjectType>(projectToCreate);
     setProjects([...projects, newProject]);
-    alert("Project Created");
   }
 
   // TODO : Test this functionality once the delete project button is created

@@ -1,9 +1,8 @@
-import { ID } from "@/lib/types";
 import { ColumnProviderContext } from "@/providers/ColumnProvider";
 import { useContext } from "react";
 import { useBoard } from "./useBoard";
 
-export function useTasks(columnId: ID) {
+export function useTasks(columnId: string) {
   const context = useContext(ColumnProviderContext);
   const { selectedProject } = useBoard();
 
@@ -17,7 +16,8 @@ export function useTasks(columnId: ID) {
   const filteredTasks = selectedProject
     ? tasks.filter(
         (task) =>
-          task.projectId === selectedProject.$id && task.columnId === columnId
+          task.project.$id === selectedProject.$id &&
+          task.column.$id === columnId
       )
     : [];
 

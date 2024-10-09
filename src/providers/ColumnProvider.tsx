@@ -4,11 +4,12 @@ import {
   deleteColumnDoc,
   deleteTaskDoc,
   getColumns,
+  getTasks,
   updateColumnDoc,
   updateTaskDoc,
 } from "@/appwrite/database";
 import { useBoard } from "@/hooks/useBoard";
-import { ColumnType, ID, TaskType } from "@/lib/types";
+import { ColumnType, TaskType } from "@/lib/types";
 import { DragEndEvent, DragOverEvent, DragStartEvent } from "@dnd-kit/core";
 import { arrayMove } from "@dnd-kit/sortable";
 import { createContext, ReactNode, useEffect, useState } from "react";
@@ -29,11 +30,11 @@ function useColumnProvider() {
   async function createNewColumn() {
     if (selectedProject) {
       const columnToAdd = {
-        projectId: selectedProject.$id,
+        project: selectedProject.$id,
         title: `Column ${columns.length + 1}`,
       };
       const column = await createColumnDoc<ColumnType>(columnToAdd);
-      setColumns([...columns, column]);
+      setColumns((prev) => [...prev, column]);
     }
   }
 
@@ -56,11 +57,11 @@ function useColumnProvider() {
   }
 
   // TODO
-  async function createTask(columnId: ID) {
+  async function createTask(columnId: string) {
     if (selectedProject) {
       const task = {
-        projectId: selectedProject.$id,
-        columnId,
+        project: selectedProject.$id,
+        column: columnId,
         content: `Task ${tasks.length + 1}`,
       };
       const newTask = await createTaskDoc<TaskType>(task);
@@ -86,6 +87,7 @@ function useColumnProvider() {
 
   // TODO
   function onDragStart(e: DragStartEvent) {
+    console.log(e);
     if (e.active.data.current?.type === "Column") {
       setActiveColumn(e.active.data.current.column);
       return;
@@ -97,6 +99,7 @@ function useColumnProvider() {
   }
 
   function onDragEnd(e: DragEndEvent) {
+    console.log(e);
     setActiveColumn(undefined);
     setActiveTask(undefined);
     const { active, over } = e;
@@ -112,6 +115,7 @@ function useColumnProvider() {
   }
 
   function onDragOver(e: DragOverEvent) {
+    console.log(e);
     const { active, over } = e;
     if (!over) return;
     const activeId = active.id;
@@ -128,7 +132,7 @@ function useColumnProvider() {
       setTasks((tasks) => {
         const activeIdx = tasks.findIndex((t) => t.$id === activeId);
         const overIdx = tasks.findIndex((t) => t.$id === overId);
-        tasks[activeIdx].columnId = tasks[overIdx].columnId;
+        tasks[activeIdx].column.$id = tasks[overIdx].column.$id;
         return arrayMove(tasks, activeIdx, overIdx);
       });
     }
@@ -138,19 +142,23 @@ function useColumnProvider() {
     if (isActiveATask && isOverAColumn) {
       setTasks((tasks) => {
         const activeIdx = tasks.findIndex((t) => t.$id === activeId);
-        tasks[activeIdx].columnId = overId as string;
+        tasks[activeIdx].column.$id = overId as string;
         return arrayMove(tasks, activeIdx, activeIdx);
       });
     }
   }
 
   useEffect(() => {
-    async function fetchColumns(id: string) {
-      const cols = await getColumns<ColumnType>(id);
+    async function fetchColumnsAndTasks(id: string) {
+      const [cols, tasks] = await Promise.all([
+        getColumns<ColumnType>(id),
+        getTasks<TaskType>(id),
+      ]);
       setColumns(cols);
+      setTasks(tasks);
     }
     if (selectedProject) {
-      fetchColumns(selectedProject.$id);
+      fetchColumnsAndTasks(selectedProject.$id);
     }
   }, [selectedProject]);
 

@@ -9,8 +9,10 @@ I am planning to build the project further on top of the tutorial.
 - [ ] User should be able switch between Themes.
 - [ ] User should be able to enter the value when creating a new Column/Task.
 - [x] User should be able to create multiple boards and organize them into projects.
-- [ ] User should be able to save their board in the backend database. (Firebase/Supabase).
+- [x] User should be able to save their board in the backend database. (Appwrite).
 
-## Planned Non-Functional Requirements
+## Appwrite TODO
 
-- [x] Use any random ID generator libraries like UUID/CUID/nanoid.
+- [ ] Implement Auth Functionality
+- [ ] To implement functions to validate the task belongs to correct project and column combination.
+- [ ] To persist the order of the columns and tasks in Database.
