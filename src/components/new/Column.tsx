@@ -77,7 +77,7 @@ export default function Column({ column }: Props) {
               }}
               onKeyDown={(e) => {
                 if (e.key === "Enter") {
-                  updateColumn(column.$id, columnTitle);
+                  updateColumn(column.$id, { title: columnTitle });
                   setEditMode(false);
                 }
               }}

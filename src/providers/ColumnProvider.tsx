@@ -9,7 +9,13 @@ import {
   updateTaskDoc,
 } from "@/appwrite/database";
 import { useBoard } from "@/hooks/useBoard";
-import { ColumnType, TaskType } from "@/lib/types";
+import { usePreviousValue } from "@/hooks/usePreviousValue";
+import {
+  ColumnType,
+  TaskType,
+  UpdateColumnType,
+  UpdateTaskType,
+} from "@/lib/types";
 import { DragEndEvent, DragOverEvent, DragStartEvent } from "@dnd-kit/core";
 import { arrayMove } from "@dnd-kit/sortable";
 import { createContext, ReactNode, useEffect, useState } from "react";
@@ -26,16 +32,49 @@ function useColumnProvider() {
   const [activeColumn, setActiveColumn] = useState<ColumnType>();
   const [tasks, setTasks] = useState<TaskType[]>([]);
   const [activeTask, setActiveTask] = useState<TaskType>();
+  const prevColumns = usePreviousValue(columns);
+  const prevTasks = usePreviousValue(tasks);
 
   async function createNewColumn() {
     if (selectedProject) {
       const columnToAdd = {
         project: selectedProject.$id,
         title: `Column ${columns.length + 1}`,
+        position:
+          columns.length === 0 ? 1 : columns[columns.length - 1].position + 1,
       };
       const column = await createColumnDoc<ColumnType>(columnToAdd);
       setColumns((prev) => [...prev, column]);
     }
+  }
+
+  // TODO
+  async function createTask(columnId: string) {
+    if (selectedProject) {
+      const task = {
+        project: selectedProject.$id,
+        column: columnId,
+        content: `Task ${tasks.length + 1}`,
+        position: tasks.length === 0 ? 1 : tasks[tasks.length - 1].position + 1,
+      };
+      const newTask = await createTaskDoc<TaskType>(task);
+      setTasks([...tasks, newTask]);
+    }
+  }
+
+  async function updateColumn(id: string, data: UpdateColumnType) {
+    const doc = await updateColumnDoc<ColumnType>(id, data);
+    setColumns((prevCols) =>
+      prevCols.map((c) => (c.$id === doc.$id ? { ...c, ...doc } : c))
+    );
+  }
+
+  // TODO
+  async function updateTask(id: string, data: UpdateTaskType) {
+    const doc = await updateTaskDoc<TaskType>(id, data);
+    setTasks((prevTasks) =>
+      prevTasks.map((t) => (t.$id === doc.$id ? { ...t, ...doc } : t))
+    );
   }
 
   // TODO
@@ -48,37 +87,6 @@ function useColumnProvider() {
   }
 
   // TODO
-  async function updateColumn(id: string, title: string) {
-    const doc = await updateColumnDoc<ColumnType>(id, { title });
-    const updatedColumns = columns.map((c) =>
-      c.$id === doc.$id ? { ...c, title } : c
-    );
-    setColumns(updatedColumns);
-  }
-
-  // TODO
-  async function createTask(columnId: string) {
-    if (selectedProject) {
-      const task = {
-        project: selectedProject.$id,
-        column: columnId,
-        content: `Task ${tasks.length + 1}`,
-      };
-      const newTask = await createTaskDoc<TaskType>(task);
-      setTasks([...tasks, newTask]);
-    }
-  }
-
-  // TODO
-  async function updateTask(id: string, content: string) {
-    const doc = await updateTaskDoc<TaskType>(id, { content });
-    const updatedTasks = tasks.map((task) =>
-      task.$id === doc.$id ? { ...task, content } : task
-    );
-    setTasks(updatedTasks);
-  }
-
-  // TODO
   async function deleteTask(id: string) {
     await deleteTaskDoc(id);
     const newTasks = tasks.filter((t) => t.$id !== id);
@@ -87,7 +95,6 @@ function useColumnProvider() {
 
   // TODO
   function onDragStart(e: DragStartEvent) {
-    console.log(e);
     if (e.active.data.current?.type === "Column") {
       setActiveColumn(e.active.data.current.column);
       return;
@@ -99,7 +106,6 @@ function useColumnProvider() {
   }
 
   function onDragEnd(e: DragEndEvent) {
-    console.log(e);
     setActiveColumn(undefined);
     setActiveTask(undefined);
     const { active, over } = e;
@@ -115,7 +121,6 @@ function useColumnProvider() {
   }
 
   function onDragOver(e: DragOverEvent) {
-    console.log(e);
     const { active, over } = e;
     if (!over) return;
     const activeId = active.id;
@@ -161,6 +166,42 @@ function useColumnProvider() {
       fetchColumnsAndTasks(selectedProject.$id);
     }
   }, [selectedProject]);
+
+  // Listen to changes in columns and act when the position is changed
+  useEffect(() => {
+    async function updatePosition() {
+      if (columns.length === 0) return;
+      if (columns.length !== prevColumns.length) return; // Do Nothing for create/delete operation
+      const promises = [];
+      for (let i = 0; i < columns.length; i++) {
+        const col = columns[i];
+        const prevCol = prevColumns[i];
+        if (col.$id !== prevCol.$id) {
+          promises.push(updateColumn(col.$id, { position: prevCol.position }));
+        }
+      }
+      await Promise.all(promises);
+    }
+    updatePosition();
+  }, [columns, prevColumns]);
+
+  // Listen to changes in tasks and act when the position is changed
+  useEffect(() => {
+    async function updatePosition() {
+      if (tasks.length === 0) return;
+      if (tasks.length !== prevTasks.length) return; // Do Nothing for create/delete operation
+      const promises = [];
+      for (let i = 0; i < tasks.length; i++) {
+        const task = tasks[i];
+        const prevTask = prevTasks[i];
+        if (task.$id !== prevTask.$id) {
+          promises.push(updateTask(task.$id, { position: prevTask.position }));
+        }
+      }
+      await Promise.all(promises);
+    }
+    updatePosition();
+  }, [prevTasks, tasks]);
 
   return {
     columns,

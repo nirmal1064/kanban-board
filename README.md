@@ -16,3 +16,6 @@ I am planning to build the project further on top of the tutorial.
 - [ ] Implement Auth Functionality
 - [ ] To implement functions to validate the task belongs to correct project and column combination.
 - [ ] To persist the order of the columns and tasks in Database.
+- [ ] Implement security rules to restrict access to db
+
+## Bugs

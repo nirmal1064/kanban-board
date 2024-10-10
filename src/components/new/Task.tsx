@@ -89,7 +89,7 @@ export default function Task({ task }: Props) {
               return;
             }
             if (e.key === "Enter") {
-              updateTask(task.$id, taskContent);
+              updateTask(task.$id, { content: taskContent });
               toggleEditMode();
             }
           }}

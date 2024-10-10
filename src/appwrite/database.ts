@@ -59,7 +59,7 @@ async function getDataByProject<T extends Models.Document>(
   collectionId: string,
   projectId: string
 ) {
-  const query = [Query.equal("project", projectId)];
+  const query = [Query.equal("project", projectId), Query.orderAsc("position")];
   const response = await db.listDocuments<T>(DATABASE_ID, collectionId, query);
   return response.documents;
 }
