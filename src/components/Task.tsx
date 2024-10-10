@@ -5,8 +5,8 @@ import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
 import { Trash } from "lucide-react";
 import { ChangeEvent, useState } from "react";
-import { Button } from "../ui/button";
-import { Textarea } from "../ui/textarea";
+import { Button } from "./ui/button";
+import { Textarea } from "./ui/textarea";
 
 type Props = { task: TaskType };
 

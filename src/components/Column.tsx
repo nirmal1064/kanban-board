@@ -6,8 +6,8 @@ import { SortableContext, useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
 import { CirclePlus, Trash } from "lucide-react";
 import { ChangeEvent, useMemo, useState } from "react";
-import { Button } from "../ui/button";
-import { Input } from "../ui/input";
+import { Button } from "./ui/button";
+import { Input } from "./ui/input";
 import Task from "./Task";
 
 type Props = { column: ColumnType };

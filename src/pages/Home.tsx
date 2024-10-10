@@ -1,5 +1,5 @@
+import Board from "@/components/Board";
 import Sidebar from "@/components/Sidebar";
-import Board from "@/components/new/Board";
 import { useEffect } from "react";
 
 export default function HomePage() {

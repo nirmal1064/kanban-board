@@ -1,6 +1,6 @@
 import { useBoard } from "@/hooks/useBoard";
 import { Plus } from "lucide-react";
-import ProjectCard from "./new/ProjectCard";
+import ProjectCard from "./ProjectCard";
 import { Button } from "./ui/button";
 
 export default function Sidebar() {
