@@ -3,19 +3,17 @@ import { TaskType } from "@/lib/types";
 import { cn } from "@/lib/utils";
 import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
-import { Trash } from "lucide-react";
-import { ChangeEvent, useState } from "react";
+import { SquarePen, Trash } from "lucide-react";
+import { useState } from "react";
 import { DeleteAlert } from "./modals/DeleteAlert";
+import TaskModal from "./modals/TaskModal";
 import { Button } from "./ui/button";
-import { Textarea } from "./ui/textarea";
 
 type Props = { task: TaskType };
 
 export default function Task({ task }: Props) {
-  const { deleteTask, updateTask } = useColumn();
+  const { deleteTask } = useColumn();
   const [mouseOver, setMouseOver] = useState(false);
-  const [editMode, setEditMode] = useState(false);
-  const [taskContent, setTaskContent] = useState(task.content);
   const {
     setNodeRef,
     attributes,
@@ -26,18 +24,11 @@ export default function Task({ task }: Props) {
   } = useSortable({
     id: task.$id,
     data: { type: "Task", task },
-    disabled: editMode,
   });
-
   const style = {
     transition,
     transform: CSS.Transform.toString(transform),
   };
-
-  function toggleEditMode() {
-    setEditMode((prev) => !prev);
-    setMouseOver(false);
-  }
 
   if (isDragging) {
     return (
@@ -55,50 +46,6 @@ export default function Task({ task }: Props) {
     );
   }
 
-  if (editMode) {
-    return (
-      <div
-        ref={setNodeRef}
-        style={style}
-        {...attributes}
-        {...listeners}
-        className={cn(
-          "relative flex h-[100px] min-h-[100px] cursor-grab items-center rounded-xl bg-main p-2.5 text-left",
-          "hover:ring-2 hover:ring-inset hover:ring-rose-500"
-        )}
-      >
-        <Textarea
-          ref={(textarea) => {
-            // To position the cursor at the end of the text
-            if (textarea) {
-              const length = textarea.value.length;
-              textarea.setSelectionRange(length, length);
-            }
-          }}
-          autoFocus
-          className="h-[90%] w-full resize-none border-none bg-transparent focus:outline-none focus-visible:ring-0"
-          value={taskContent}
-          onChange={(e: ChangeEvent<HTMLTextAreaElement>) => {
-            setTaskContent(e.target.value);
-          }}
-          onBlur={toggleEditMode}
-          onKeyDown={(e) => {
-            if (e.shiftKey) {
-              return;
-            }
-            if (e.key === "Enter" && e.shiftKey) {
-              return;
-            }
-            if (e.key === "Enter") {
-              updateTask(task.$id, { content: taskContent });
-              toggleEditMode();
-            }
-          }}
-        />
-      </div>
-    );
-  }
-
   return (
     <div
       ref={setNodeRef}
@@ -109,29 +56,39 @@ export default function Task({ task }: Props) {
         "relative flex h-[100px] min-h-[100px] cursor-grab items-center rounded-xl bg-main p-2.5 text-left",
         "hover:ring-2 hover:ring-inset hover:ring-rose-500"
       )}
-      onMouseEnter={() => setMouseOver(true)}
-      onMouseLeave={() => setMouseOver(false)}
-      onClick={() => {
-        toggleEditMode();
-      }}
+      onMouseEnter={() => setMouseOver(() => true)}
+      onMouseLeave={() => setMouseOver(() => false)}
     >
       <p className="my-auto h-[90%] w-full overflow-y-auto overflow-x-hidden whitespace-pre-wrap">
         {task.content}
       </p>
       {mouseOver && (
-        <DeleteAlert
-          trigger={
-            <Button
-              variant={"ghost"}
-              className="absolute right-4 top-1/2 -translate-y-1/2 rounded bg-column p-2 opacity-60 hover:opacity-100"
-              onClick={(e) => e.stopPropagation()}
-            >
-              <Trash className="h-4 w-4" />
-            </Button>
-          }
-          description="This will delete this task from the Project"
-          onDelete={() => deleteTask(task.$id)}
-        />
+        <>
+          <TaskModal
+            trigger={
+              <Button
+                variant={"ghost"}
+                className="absolute right-4 top-[20%] -translate-y-[20%] rounded bg-column p-2 opacity-60 hover:opacity-100"
+              >
+                <SquarePen className="h-4 w-4" />
+              </Button>
+            }
+            action="Update"
+            task={task}
+          />
+          <DeleteAlert
+            trigger={
+              <Button
+                variant={"ghost"}
+                className="absolute right-4 top-[80%] -translate-y-[80%] rounded bg-column p-2 opacity-60 hover:opacity-100"
+              >
+                <Trash className="h-4 w-4" />
+              </Button>
+            }
+            description="This will delete this task from the Project"
+            onDelete={() => deleteTask(task.$id)}
+          />
+        </>
       )}
     </div>
   );

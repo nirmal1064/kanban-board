@@ -105,7 +105,7 @@ export default function Column({ column }: Props) {
           ))}
         </SortableContext>
       </div>
-      <TaskModal column={column} />
+      <TaskModal action="Create" column={column} />
     </div>
   );
 }

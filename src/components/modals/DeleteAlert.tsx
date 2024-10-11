@@ -20,21 +20,14 @@ type Props = {
 export function DeleteAlert({ trigger, description, onDelete }: Props) {
   return (
     <AlertDialog>
-      <AlertDialogTrigger onBlur={(e) => e.stopPropagation()} asChild>
-        {trigger}
-      </AlertDialogTrigger>
-      <AlertDialogContent
-        onClick={(e) => e.stopPropagation()}
-        onBlur={(e) => e.stopPropagation()}
-      >
+      <AlertDialogTrigger asChild>{trigger}</AlertDialogTrigger>
+      <AlertDialogContent>
         <AlertDialogHeader>
           <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
           <AlertDialogDescription>{description}</AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>
-          <AlertDialogCancel onBlur={(e) => e.stopPropagation()}>
-            Cancel
-          </AlertDialogCancel>
+          <AlertDialogCancel>Cancel</AlertDialogCancel>
           <AlertDialogAction
             className="bg-red-500 text-primary hover:bg-red-500/85"
             onClick={onDelete}
