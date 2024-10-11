@@ -35,11 +35,11 @@ function useColumnProvider() {
   const prevColumns = usePreviousValue(columns);
   const prevTasks = usePreviousValue(tasks);
 
-  async function createNewColumn() {
+  async function createNewColumn(title: string) {
     if (selectedProject) {
       const columnToAdd = {
         project: selectedProject.$id,
-        title: `Column ${columns.length + 1}`,
+        title,
         position:
           columns.length === 0 ? 1 : columns[columns.length - 1].position + 1,
       };
@@ -49,12 +49,12 @@ function useColumnProvider() {
   }
 
   // TODO
-  async function createTask(columnId: string) {
+  async function createTask(columnId: string, content: string) {
     if (selectedProject) {
       const task = {
         project: selectedProject.$id,
         column: columnId,
-        content: `Task ${tasks.length + 1}`,
+        content,
         position: tasks.length === 0 ? 1 : tasks[tasks.length - 1].position + 1,
       };
       const newTask = await createTaskDoc<TaskType>(task);

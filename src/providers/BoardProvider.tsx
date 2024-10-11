@@ -18,11 +18,8 @@ function useBoardProvider() {
     null
   );
 
-  async function createNewProject() {
-    const projectToCreate = {
-      title: `Project ${projects.length + 1}`,
-    };
-    const newProject = await createProject<ProjectType>(projectToCreate);
+  async function createNewProject(title: string) {
+    const newProject = await createProject<ProjectType>({ title });
     setProjects([...projects, newProject]);
   }
 

@@ -8,12 +8,11 @@ import {
   useSensors,
 } from "@dnd-kit/core";
 import { SortableContext } from "@dnd-kit/sortable";
-import { Plus } from "lucide-react";
 import { useMemo } from "react";
 import { createPortal } from "react-dom";
-import { Button } from "./ui/button";
 import Column from "./Column";
 import Task from "./Task";
+import ColumnModal from "./modals/ColumnModal";
 
 export default function Board() {
   const { selectedProject } = useBoard();
@@ -21,7 +20,6 @@ export default function Board() {
     columns,
     activeColumn,
     activeTask,
-    createNewColumn,
     onDragStart,
     onDragOver,
     onDragEnd,
@@ -53,14 +51,7 @@ export default function Board() {
             ))}
           </SortableContext>
         </div>
-        <Button
-          variant={"outline"}
-          className="flex h-[60px] w-[350px] min-w-[350px] cursor-pointer gap-2 rounded-lg border-2 border-column bg-main ring-rose-500 hover:ring-2"
-          onClick={() => createNewColumn()}
-        >
-          <Plus className="h-5 w-5" />
-          Add Column
-        </Button>
+        <ColumnModal />
       </div>
       {createPortal(
         <DragOverlay>

@@ -1,10 +1,9 @@
 import { useBoard } from "@/hooks/useBoard";
-import { Plus } from "lucide-react";
+import ProjectModal from "./modals/ProjectModal";
 import ProjectCard from "./ProjectCard";
-import { Button } from "./ui/button";
 
 export default function Sidebar() {
-  const { projects, createNewProject } = useBoard();
+  const { projects } = useBoard();
 
   return (
     <div className="hidden w-[250px] min-w-[250px] border-separate border-2 md:block">
@@ -19,10 +18,7 @@ export default function Sidebar() {
             ))}
           </div>
         )}
-        <Button variant={"outline"} onClick={() => createNewProject()}>
-          <Plus className="h-5 w-5" />
-          Add Project
-        </Button>
+        <ProjectModal />
       </div>
     </div>
   );

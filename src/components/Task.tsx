@@ -5,6 +5,7 @@ import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
 import { Trash } from "lucide-react";
 import { ChangeEvent, useState } from "react";
+import { DeleteAlert } from "./modals/DeleteAlert";
 import { Button } from "./ui/button";
 import { Textarea } from "./ui/textarea";
 
@@ -110,19 +111,27 @@ export default function Task({ task }: Props) {
       )}
       onMouseEnter={() => setMouseOver(true)}
       onMouseLeave={() => setMouseOver(false)}
-      onClick={toggleEditMode}
+      onClick={() => {
+        toggleEditMode();
+      }}
     >
       <p className="my-auto h-[90%] w-full overflow-y-auto overflow-x-hidden whitespace-pre-wrap">
         {task.content}
       </p>
       {mouseOver && (
-        <Button
-          variant={"ghost"}
-          className="absolute right-4 top-1/2 -translate-y-1/2 rounded bg-column p-2 opacity-60 hover:opacity-100"
-          onClick={() => deleteTask(task.$id)}
-        >
-          <Trash className="h-4 w-4" />
-        </Button>
+        <DeleteAlert
+          trigger={
+            <Button
+              variant={"ghost"}
+              className="absolute right-4 top-1/2 -translate-y-1/2 rounded bg-column p-2 opacity-60 hover:opacity-100"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <Trash className="h-4 w-4" />
+            </Button>
+          }
+          description="This will delete this task from the Project"
+          onDelete={() => deleteTask(task.$id)}
+        />
       )}
     </div>
   );

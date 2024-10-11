@@ -4,16 +4,18 @@ import { ColumnType } from "@/lib/types";
 import { cn } from "@/lib/utils";
 import { SortableContext, useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
-import { CirclePlus, Trash } from "lucide-react";
+import { Trash } from "lucide-react";
 import { ChangeEvent, useMemo, useState } from "react";
+import Task from "./Task";
+import { DeleteAlert } from "./modals/DeleteAlert";
+import TaskModal from "./modals/TaskModal";
 import { Button } from "./ui/button";
 import { Input } from "./ui/input";
-import Task from "./Task";
 
 type Props = { column: ColumnType };
 
 export default function Column({ column }: Props) {
-  const { deleteColumn, updateColumn, createTask } = useColumn();
+  const { deleteColumn, updateColumn } = useColumn();
   const { tasks } = useTasks(column.$id);
   const taskIds = useMemo(() => tasks.map((task) => task.$id), [tasks]);
   const [editMode, setEditMode] = useState(false);
@@ -86,9 +88,15 @@ export default function Column({ column }: Props) {
             <p onClick={() => setEditMode(true)}>{column.title}</p>
           )}
         </div>
-        <Button variant={"ghost"} onClick={() => deleteColumn(column.$id)}>
-          <Trash className="h-4 w-4" />
-        </Button>
+        <DeleteAlert
+          trigger={
+            <Button variant={"ghost"}>
+              <Trash className="h-4 w-4" />
+            </Button>
+          }
+          description="This will delete this Column from the Project"
+          onDelete={() => deleteColumn(column.$id)}
+        />
       </div>
       <div className="flex flex-grow flex-col gap-3 overflow-y-auto overflow-x-hidden p-2">
         <SortableContext items={taskIds}>
@@ -97,17 +105,7 @@ export default function Column({ column }: Props) {
           ))}
         </SortableContext>
       </div>
-      <Button
-        className={cn(
-          "flex items-center gap-2 rounded-md border-2 border-column border-x-column p-6 active:bg-background",
-          "hover:bg-main hover:text-rose-500"
-        )}
-        variant={"outline"}
-        onClick={() => createTask(column.$id)}
-      >
-        <CirclePlus className="h-5 w-5" />
-        Add Task
-      </Button>
+      <TaskModal column={column} />
     </div>
   );
 }
