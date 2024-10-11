@@ -60,7 +60,7 @@ export default function ColumnModal() {
           <DialogFooter>
             <Button
               type="submit"
-              className="bg-rose-500 font-semibold text-primary hover:bg-rose-500/80"
+              className="bg-rose-500 font-semibold hover:bg-rose-500/80 dark:text-primary"
             >
               Create Column
             </Button>

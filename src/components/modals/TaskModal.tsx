@@ -101,7 +101,7 @@ export default function TaskModal({ action, column, task, trigger }: Props) {
           <DialogFooter>
             <Button
               type="submit"
-              className="bg-rose-500 font-semibold text-primary hover:bg-rose-500/80"
+              className="bg-rose-500 font-semibold hover:bg-rose-500/80 dark:text-primary"
             >
               {action} Task
             </Button>

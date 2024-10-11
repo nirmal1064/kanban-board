@@ -4,12 +4,13 @@ Project built with the help of the [YouTube Video](https://www.youtube.com/watch
 
 I am planning to build the project further on top of the tutorial.
 
-## Planned Functional Requirements
+## Requirements
 
-- [ ] User should be able switch between Themes.
+- [x] User should be able switch between Themes.
 - [ ] User should be able to enter the value when creating a new Column/Task.
 - [x] User should be able to create multiple boards and organize them into projects.
 - [x] User should be able to save their board in the backend database. (Appwrite).
+- [ ] User should have a mobile responsive UI.
 
 ## Appwrite TODO
 

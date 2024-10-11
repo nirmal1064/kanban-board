@@ -1,12 +1,7 @@
 import Board from "@/components/Board";
 import Sidebar from "@/components/Sidebar";
-import { useEffect } from "react";
 
 export default function HomePage() {
-  useEffect(() => {
-    document.body.classList.add("dark");
-  }, []);
-
   return (
     <div className="flex">
       <Sidebar />

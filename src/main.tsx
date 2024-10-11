@@ -4,13 +4,16 @@ import App from "./App.tsx";
 import "./index.css";
 import BoardProvider from "./providers/BoardProvider.tsx";
 import ColumnProvider from "./providers/ColumnProvider.tsx";
+import { ThemeProvider } from "./providers/ThemeProvider.tsx";
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
-    <BoardProvider>
-      <ColumnProvider>
-        <App />
-      </ColumnProvider>
-    </BoardProvider>
+    <ThemeProvider>
+      <BoardProvider>
+        <ColumnProvider>
+          <App />
+        </ColumnProvider>
+      </BoardProvider>
+    </ThemeProvider>
   </StrictMode>
 );
