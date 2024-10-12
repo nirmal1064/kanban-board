@@ -11,7 +11,7 @@ I am planning to build the project further on top of the tutorial.
 - [x] User should be able to create multiple boards and organize them into projects.
 - [x] User should be able to save their board in the backend database. (Appwrite).
 - [ ] User should have a mobile responsive UI.
-- [ ] User should be able to rename/delete a Project
+- [x] User should be able to rename/delete a Project.
 
 ## Appwrite TODO
 

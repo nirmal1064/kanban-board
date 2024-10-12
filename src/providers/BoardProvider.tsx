@@ -2,6 +2,7 @@ import {
   createProject,
   deleteProjectDoc,
   getProjects,
+  updateProjectDoc,
 } from "@/appwrite/database";
 import { useAuth } from "@/hooks/useAuth";
 import { ProjectType } from "@/lib/types";
@@ -26,7 +27,13 @@ function useBoardProvider() {
     setProjects([...projects, newProject]);
   }
 
-  // TODO : Test this functionality once the delete project button is created
+  async function updateProject(id: string, title: string) {
+    const doc = await updateProjectDoc<ProjectType>(id, { title });
+    setProjects((prevProjects) =>
+      prevProjects.map((p) => (p.$id === doc.$id ? { ...p, ...doc } : p))
+    );
+  }
+
   async function deleteProject(id: string) {
     await deleteProjectDoc(id);
     const newProjects = projects.filter((p) => p.$id !== id);
@@ -55,6 +62,7 @@ function useBoardProvider() {
     loading,
     projects,
     createNewProject,
+    updateProject,
     deleteProject,
     selectedProject,
     setSelectedProject,

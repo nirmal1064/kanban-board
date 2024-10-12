@@ -66,6 +66,13 @@ async function getDataByProject<T extends Models.Document>(
 /* All Read Operations End */
 
 /* All Update Operations Start */
+export async function updateProjectDoc<T extends Models.Document>(
+  id: string,
+  data: Omit<T, keyof Models.Document>
+): Promise<T> {
+  return await db.updateDocument(DATABASE_ID, PROJECTS_COLLECTION_ID, id, data);
+}
+
 export async function updateColumnDoc<T extends Models.Document>(
   id: string,
   data: Omit<T, keyof Models.Document>

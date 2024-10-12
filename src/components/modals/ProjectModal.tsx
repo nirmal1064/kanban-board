@@ -11,13 +11,16 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useBoard } from "@/hooks/useBoard";
+import { ProjectType } from "@/lib/types";
 import { Plus } from "lucide-react";
 import { FormEvent, ReactNode, useState } from "react";
 
-type Props = { trigger?: ReactNode };
+type CreateAction = { action: "Create"; project?: never };
+type UpdateAction = { action: "Update"; project: ProjectType };
+type Props = (CreateAction | UpdateAction) & { trigger?: ReactNode };
 
-export default function ProjectModal({ trigger }: Props) {
-  const { createNewProject } = useBoard();
+export default function ProjectModal({ action, trigger, project }: Props) {
+  const { createNewProject, updateProject } = useBoard();
   const [open, setOpen] = useState(false);
 
   async function handleFormSubmit(e: FormEvent<HTMLFormElement>) {
@@ -25,7 +28,11 @@ export default function ProjectModal({ trigger }: Props) {
     const form = new FormData(e.currentTarget);
     const title = form.get("title") as string;
     if (!title || title.trim().length === 0) return;
-    await createNewProject(title);
+    if (action === "Create") {
+      await createNewProject(title);
+    } else {
+      await updateProject(project.$id, title);
+    }
     setOpen((prev) => !prev);
   }
 
@@ -42,9 +49,11 @@ export default function ProjectModal({ trigger }: Props) {
       </DialogTrigger>
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
-          <DialogTitle>Create Project</DialogTitle>
+          <DialogTitle>{action} Project</DialogTitle>
           <DialogDescription>
-            Create your Exciting new Project.
+            {action === "Create"
+              ? "Create Your Exciting new Project."
+              : "Update Your Project"}
           </DialogDescription>
         </DialogHeader>
         <form onSubmit={handleFormSubmit}>
@@ -53,7 +62,13 @@ export default function ProjectModal({ trigger }: Props) {
               <Label htmlFor="name" className="text-right">
                 Title
               </Label>
-              <Input className="col-span-3" name="title" type="text" />
+              <Input
+                className="col-span-3"
+                name="title"
+                type="text"
+                defaultValue={action === "Create" ? undefined : project.title}
+                autoFocus
+              />
             </div>
           </div>
           <DialogFooter>

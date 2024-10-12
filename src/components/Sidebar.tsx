@@ -41,7 +41,7 @@ export default function Sidebar() {
 
       <div className="flex justify-between border-b p-2">
         <h2 className="text-lg font-bold text-primary">Projects</h2>
-        <ProjectModal />
+        <ProjectModal action="Create" />
       </div>
 
       <div className="flex-grow overflow-y-auto p-4">
@@ -58,6 +58,7 @@ export default function Sidebar() {
               No Projects Found. Create a New Project to continue
             </h2>
             <ProjectModal
+              action="Create"
               trigger={
                 <Button variant={"secondary"} className="flex gap-2">
                   <Plus className="h-5 w-5" />
@@ -77,10 +78,10 @@ export default function Sidebar() {
 
       <div className="border-t border-border p-4">
         <Button
-          className="flex w-full items-center justify-center gap-2 bg-rose-500 text-white hover:bg-rose-600"
+          className="flex w-full items-center justify-center gap-2 bg-rose-500 font-bold text-white hover:bg-rose-600"
           onClick={handleLogOut}
         >
-          <LogOut className="h-4 w-4" />
+          <LogOut className="h-4 w-4" strokeWidth={3} />
           Logout
         </Button>
       </div>
