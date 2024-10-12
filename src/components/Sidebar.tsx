@@ -2,7 +2,8 @@ import { useAuth } from "@/hooks/useAuth";
 import { useBoard } from "@/hooks/useBoard";
 import { useColumn } from "@/hooks/useColumn";
 import { cn } from "@/lib/utils";
-import { Kanban, Loader, LogOut } from "lucide-react";
+import { Kanban, Loader, LogOut, Plus } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 import ProjectModal from "./modals/ProjectModal";
 import ProjectCard from "./ProjectCard";
 import { ThemeToggle } from "./ThemeToggle";
@@ -12,17 +13,20 @@ export default function Sidebar() {
   const { projects, loading, resetBoard } = useBoard();
   const { logOutUser } = useAuth();
   const { resetColumnsAndTasks } = useColumn();
+  const navigate = useNavigate();
 
   async function handleLogOut() {
     await logOutUser();
     resetBoard();
     resetColumnsAndTasks();
+    console.log("Navigating to login");
+    navigate("/login");
   }
 
   return (
-    <div className="hidden w-[250px] min-w-[250px] border-separate flex-col border-2 md:flex">
-      <div className="flex items-center justify-between">
-        <div className="flex items-center gap-1">
+    <div className="hidden h-screen w-[275px] min-w-[275px] flex-col border-r border-border md:flex">
+      <div className="flex items-center justify-between border-b border-border px-2 py-4">
+        <div className="flex items-center gap-2">
           <Kanban className="h-6 w-6 text-rose-500" strokeWidth={3} />
           <h1
             className={cn(
@@ -35,30 +39,46 @@ export default function Sidebar() {
         </div>
         <ThemeToggle />
       </div>
-      <div className="flex flex-grow flex-col gap-2">
-        <h1 className="text-lg font-bold text-primary">Projects</h1>
+
+      <div className="flex justify-between border-b p-2">
+        <h2 className="text-lg font-bold text-primary">Projects</h2>
+        <ProjectModal />
+      </div>
+
+      <div className="flex-grow overflow-y-auto p-4">
         {loading ? (
-          <div className="flex items-center justify-center">
+          <div className="flex h-full items-center justify-center">
             <Loader
               className={cn("h-8 w-8 text-rose-500", "animate-spin")}
               strokeWidth={3}
             />
           </div>
         ) : projects.length === 0 ? (
-          <div>No Projects Found. Create a New Project to continue</div>
+          <div className="flex flex-col gap-4">
+            <h2 className="text-center text-muted-foreground">
+              No Projects Found. Create a New Project to continue
+            </h2>
+            <ProjectModal
+              trigger={
+                <Button variant={"secondary"} className="flex gap-2">
+                  <Plus className="h-5 w-5" />
+                  Add project
+                </Button>
+              }
+            />
+          </div>
         ) : (
-          <div className="flex flex-col gap-2">
+          <div className="space-y-2">
             {projects.map((project) => (
               <ProjectCard key={project.$id} project={project} />
             ))}
           </div>
         )}
-        <ProjectModal />
       </div>
-      <div className="w-full pb-2">
+
+      <div className="border-t border-border p-4">
         <Button
-          type="submit"
-          className="flex w-full items-center gap-2 bg-rose-500 font-semibold hover:bg-rose-500/80 dark:text-primary"
+          className="flex w-full items-center justify-center gap-2 bg-rose-500 text-white hover:bg-rose-600"
           onClick={handleLogOut}
         >
           <LogOut className="h-4 w-4" />

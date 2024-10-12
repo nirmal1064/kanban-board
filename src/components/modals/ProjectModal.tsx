@@ -12,9 +12,11 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useBoard } from "@/hooks/useBoard";
 import { Plus } from "lucide-react";
-import { FormEvent, useState } from "react";
+import { FormEvent, ReactNode, useState } from "react";
 
-export default function ProjectModal() {
+type Props = { trigger?: ReactNode };
+
+export default function ProjectModal({ trigger }: Props) {
   const { createNewProject } = useBoard();
   const [open, setOpen] = useState(false);
 
@@ -30,10 +32,13 @@ export default function ProjectModal() {
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button variant={"outline"}>
-          <Plus className="h-5 w-5" />
-          Add Project
-        </Button>
+        {trigger ? (
+          trigger
+        ) : (
+          <Button variant={"ghost"}>
+            <Plus className="h-5 w-5" />
+          </Button>
+        )}
       </DialogTrigger>
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
