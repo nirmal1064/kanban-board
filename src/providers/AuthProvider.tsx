@@ -25,7 +25,6 @@ function useAuthProvider() {
   async function logOutUser() {
     await account.deleteSession("current");
     setUser(null);
-    setLoading(true);
   }
 
   async function registerUser(data: RegisterFormType) {

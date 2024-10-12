@@ -19,7 +19,6 @@ export default function Sidebar() {
     await logOutUser();
     resetBoard();
     resetColumnsAndTasks();
-    console.log("Navigating to login");
     navigate("/login");
   }
 
