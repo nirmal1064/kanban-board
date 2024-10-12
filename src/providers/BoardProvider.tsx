@@ -3,6 +3,7 @@ import {
   deleteProjectDoc,
   getProjects,
 } from "@/appwrite/database";
+import { useAuth } from "@/hooks/useAuth";
 import { ProjectType } from "@/lib/types";
 import { createContext, ReactNode, useEffect, useState } from "react";
 
@@ -13,6 +14,8 @@ export const BoardProviderContext = createContext<
 type Props = { children: ReactNode };
 
 function useBoardProvider() {
+  const { user } = useAuth();
+  const [loading, setLoading] = useState(true);
   const [projects, setProjects] = useState<ProjectType[]>([]);
   const [selectedProject, setSelectedProject] = useState<ProjectType | null>(
     null
@@ -30,20 +33,32 @@ function useBoardProvider() {
     setProjects(newProjects);
   }
 
+  function resetBoard() {
+    setProjects([]);
+    setSelectedProject(null);
+    setLoading(true);
+  }
+
   useEffect(() => {
     async function fetchProjects() {
       const projects = await getProjects<ProjectType>();
       setProjects(projects);
+      setLoading(false);
     }
-    fetchProjects();
-  }, []);
+    if (user) {
+      setLoading(true);
+      fetchProjects();
+    }
+  }, [user]);
 
   return {
+    loading,
     projects,
     createNewProject,
     deleteProject,
     selectedProject,
     setSelectedProject,
+    resetBoard,
   };
 }
 

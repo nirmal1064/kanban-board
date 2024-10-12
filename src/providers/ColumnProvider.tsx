@@ -48,7 +48,6 @@ function useColumnProvider() {
     }
   }
 
-  // TODO
   async function createTask(columnId: string, content: string) {
     if (selectedProject) {
       const task = {
@@ -69,7 +68,6 @@ function useColumnProvider() {
     );
   }
 
-  // TODO
   async function updateTask(id: string, data: UpdateTaskType) {
     const doc = await updateTaskDoc<TaskType>(id, data);
     setTasks((prevTasks) =>
@@ -77,7 +75,6 @@ function useColumnProvider() {
     );
   }
 
-  // TODO
   async function deleteColumn(id: string) {
     await deleteColumnDoc(id);
     const newColumns = columns.filter((c) => c.$id !== id);
@@ -86,14 +83,12 @@ function useColumnProvider() {
     setTasks(newTasks);
   }
 
-  // TODO
   async function deleteTask(id: string) {
     await deleteTaskDoc(id);
     const newTasks = tasks.filter((t) => t.$id !== id);
     setTasks(newTasks);
   }
 
-  // TODO
   function onDragStart(e: DragStartEvent) {
     if (e.active.data.current?.type === "Column") {
       setActiveColumn(e.active.data.current.column);
@@ -151,6 +146,13 @@ function useColumnProvider() {
         return arrayMove(tasks, activeIdx, activeIdx);
       });
     }
+  }
+
+  function resetColumnsAndTasks() {
+    setColumns([]);
+    setTasks([]);
+    setActiveColumn(undefined);
+    setActiveTask(undefined);
   }
 
   useEffect(() => {
@@ -217,6 +219,7 @@ function useColumnProvider() {
     onDragStart,
     onDragEnd,
     onDragOver,
+    resetColumnsAndTasks,
   };
 }
 
