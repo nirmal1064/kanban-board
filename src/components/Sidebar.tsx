@@ -4,6 +4,7 @@ import { useColumn } from "@/hooks/useColumn";
 import { cn } from "@/lib/utils";
 import { Kanban, Loader, LogOut, Plus } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+import { toast } from "sonner";
 import ProjectModal from "./modals/ProjectModal";
 import ProjectCard from "./ProjectCard";
 import { ThemeToggle } from "./ThemeToggle";
@@ -20,6 +21,7 @@ export default function Sidebar() {
     resetBoard();
     resetColumnsAndTasks();
     navigate("/login");
+    toast.success("You have now logged out");
   }
 
   return (

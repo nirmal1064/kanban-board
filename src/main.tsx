@@ -11,7 +11,7 @@ createRoot(document.getElementById("root")!).render(
     <ThemeProvider>
       <AuthProvider>
         <App />
-        <Toaster />
+        <Toaster richColors toastOptions={{}} position={"top-right"} />
       </AuthProvider>
     </ThemeProvider>
   </StrictMode>
